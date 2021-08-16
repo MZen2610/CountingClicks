@@ -1,6 +1,9 @@
 import requests
 from urllib.parse import urlparse
+from dotenv import load_dotenv
 import os
+
+load_dotenv()
 
 
 def shorten_link(token, url):
@@ -24,7 +27,7 @@ def is_bitlink(bitlink):
     parsed = urlparse(str(bitlink))
     link = parsed.netloc + parsed.path
 
-    token = os.environ['token']
+    token = os.environ['TOKEN']
     headers = {"Authorization": token}
     url = f"https://api-ssl.bitly.com/v4/bitlinks/{link}"
 
