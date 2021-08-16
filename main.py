@@ -49,7 +49,6 @@ def is_bitlink(bitlink):
         except requests.exceptions.ConnectionError:
             print("Нет соединения")
 
-
-user_input = input("Введите ссылку ")
-
-is_bitlink(user_input)
+if __name__ == '__main__':
+    user_input = input("Введите ссылку ")
+    is_bitlink(user_input)
