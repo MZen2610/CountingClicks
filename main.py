@@ -1,54 +1,51 @@
-import requests
-from urllib.parse import urlparse
-from dotenv import load_dotenv
 import os
+import requests
 
-load_dotenv()
+from dotenv import load_dotenv
+from urllib.parse import urlparse
 
 
 def shorten_link(token, url):
     headers = {"Authorization": token}
     shorten_url = "https://api-ssl.bitly.com/v4/shorten"
     body = {"long_url": url}
-    response_post = requests.post(shorten_url, headers=headers, json=body)
-    response_post.raise_for_status()
-    return response_post.json()["id"]
+    response = requests.post(shorten_url, headers=headers, json=body)
+    response.raise_for_status()
+    return response.json()["id"]
 
 
 def count_clicks(token, link):
     headers = {"Authorization": token}
     url = f"https://api-ssl.bitly.com/v4/bitlinks/{link}/clicks/summary"
-    response_get = requests.get(url, headers=headers)
-    response_get.raise_for_status()
-    return response_get.json()["total_clicks"]
+    response = requests.get(url, headers=headers)
+    response.raise_for_status()
+    return response.json()["total_clicks"]
 
 
-def is_bitlink(bitlink):
-    parsed = urlparse(str(bitlink))
-    link = parsed.netloc + parsed.path
-
-    token = os.environ['TOKEN']
+def is_bitlink(bitlink, token):
+    url = f"https://api-ssl.bitly.com/v4/bitlinks/{bitlink}"
     headers = {"Authorization": token}
-    url = f"https://api-ssl.bitly.com/v4/bitlinks/{link}"
+    response = requests.get(url, headers=headers)
+    return response.ok
 
-    response_get = requests.get(url, headers=headers)
-    if response_get.ok:
-        try:
-            clicks_count = count_clicks(token, response_get.json()["id"])
-            print(f'По вашей ссылке прошли {clicks_count} раз(а)')
-        except requests.exceptions.HTTPError:
-            print("Проверьте вводимый адрес")
-        except requests.exceptions.ConnectionError:
-            print("Нет соединения")
-    else:
-        try:
-            bitlink = shorten_link(token, bitlink)
-            print(f'Битлинк {bitlink}')
-        except requests.exceptions.HTTPError:
-            print("Проверьте вводимый адрес")
-        except requests.exceptions.ConnectionError:
-            print("Нет соединения")
 
-if __name__ == '__main__':
+if __name__ == "__main__":
+    load_dotenv()
+    token = os.environ["BITLY_TOKEN"]
+
     user_input = input("Введите ссылку ")
-    is_bitlink(user_input)
+    parsed = urlparse(user_input)
+    link = f"{parsed.netloc}{parsed.path}"
+    is_bitlink = is_bitlink(link, token)
+
+    try:
+        if is_bitlink:
+            clicks_count = count_clicks(token, link)
+            print(f"По вашей ссылке прошли {clicks_count} раз(а)")
+        else:
+            bitlink = shorten_link(token, user_input)
+            print(f"Битлинк {bitlink}")
+    except requests.exceptions.HTTPError:
+        print("Проверьте вводимый адрес")
+    except requests.exceptions.ConnectionError:
+        print("Нет соединения")
