@@ -36,10 +36,9 @@ if __name__ == "__main__":
     user_input = input("Введите ссылку ")
     parsed = urlparse(user_input)
     link = f"{parsed.netloc}{parsed.path}"
-    is_bitlink = is_bitlink(link, token)
 
     try:
-        if is_bitlink:
+        if is_bitlink(link, token):
             clicks_count = count_clicks(token, link)
             print(f"По вашей ссылке прошли {clicks_count} раз(а)")
         else:
