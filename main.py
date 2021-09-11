@@ -1,5 +1,6 @@
 import os
 import requests
+import argparse
 
 from dotenv import load_dotenv
 from urllib.parse import urlparse
@@ -33,7 +34,11 @@ if __name__ == "__main__":
     load_dotenv()
     token = os.environ["BITLY_TOKEN"]
 
-    user_input = input("Введите ссылку ")
+    parser = argparse.ArgumentParser()
+    parser.add_argument('link', help='Указанная пользователем ссылка')
+    args = parser.parse_args()
+    user_input = args.link
+
     parsed = urlparse(user_input)
     link = f"{parsed.netloc}{parsed.path}"
 
