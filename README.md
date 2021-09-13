@@ -38,8 +38,7 @@ python3 main.py
 `ПЕРЕМЕННАЯ=значение`.
 
 Доступна переменная:
-- `BITLY_TOKEN` — токен полученный на bit.ly.
-
+- `BITLY_TOKEN` — токен полученный на [bit.ly](https://bitly.is/accesstoken).
 
 ## Цели проекта
 
