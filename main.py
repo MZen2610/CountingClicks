@@ -34,8 +34,8 @@ if __name__ == "__main__":
     load_dotenv()
     token = os.environ["BITLY_TOKEN"]
 
-    parser = argparse.ArgumentParser(description="Данная программа сокращает "
-        "ссылки через интерфейс bit.ly и там же можно смотреть статистику кликов")
+    parser = argparse.ArgumentParser(description="Данная программа сокращает \
+        ссылки через интерфейс bit.ly и там же можно смотреть статистику кликов")
     parser.add_argument("link", help="Указанная пользователем ссылка")
     args = parser.parse_args()
     user_input = args.link
